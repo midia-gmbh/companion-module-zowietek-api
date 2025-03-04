@@ -6,7 +6,7 @@ This module can be used to communicate with Zowietek devices, providing Companio
 ### Actions
 
 
-### Set Output Info
+##### Set Output Info
 - **Description:** Changes the video output settings such as resolution, audio state, and loop out.  
 - **Options:**  
   - **format:** Output resolution from a list of choices  
@@ -15,7 +15,7 @@ This module can be used to communicate with Zowietek devices, providing Companio
 - **Learn:** Fetches and pre-fills current output info  
 - **Callback:** Sends updated settings to the device
 
-### Set PTZ Config
+##### Set PTZ Config
 - **Description:** Configures PTZ parameters (protocol, IP/port, baud rate, etc.).  
 - **Options:**  
   - **protocol:** The PTZ protocol  
@@ -24,7 +24,7 @@ This module can be used to communicate with Zowietek devices, providing Companio
 - **Learn:** Fetches current PTZ configuration  
 - **Callback:** Sends PTZ settings to the device
 
-### Control PTZ
+##### Control PTZ
 - **Description:** Sends a PTZ command (e.g., pan, tilt, focus, preset).  
 - **Options:**  
   - **command:** Pan left/right, tilt up/down, etc.  
@@ -32,21 +32,21 @@ This module can be used to communicate with Zowietek devices, providing Companio
   - **preset_id, preset_desc:** For preset operations  
 - **Callback:** Invokes the chosen PTZ command once
 
-### Set Focus Mode
+##### Set Focus Mode
 - **Description:** Sets the PTZ focus mode to Auto, Manual, or One-Push.  
 - **Options:**  
   - **focusmode:** 0 = Auto, 1 = Manual, 2 = One-Push  
 - **Learn:** Fetches the current focus mode  
 - **Callback:** Applies the new focus mode
 
-### Set AF Sensitivity
+##### Set AF Sensitivity
 - **Description:** Sets the camera’s auto-focus sensitivity.  
 - **Options:**  
   - **selected_id:** High, Medium, Low, Ultra-Low  
 - **Learn:** Reads current AF sensitivity from the device  
 - **Callback:** Updates AF sensitivity
 
-### Set Focus Area
+##### Set Focus Area
 - **Description:** Adjusts the focus zone and optional point coordinates.  
 - **Options:**  
   - **selected_id:** Top/Center/Bottom/Left/Right/All/Point  
@@ -54,7 +54,7 @@ This module can be used to communicate with Zowietek devices, providing Companio
 - **Learn:** Fetches the current focus zone  
 - **Callback:** Applies the focus area settings
 
-### Set Focus Speed
+##### Set Focus Speed
 - **Description:** Sets the PTZ focus speed.  
 - **Options:**  
   - **focus:** Integer 1–10  
@@ -62,14 +62,14 @@ This module can be used to communicate with Zowietek devices, providing Companio
 - **Learn:** Fetches current focus speed  
 - **Callback:** Applies the chosen focus speed
 
-### Set AF Lock
+##### Set AF Lock
 - **Description:** Lock or unlock the PTZ autofocus.  
 - **Options:**  
   - **af_lock_status:** 0 = Off, 1 = On  
 - **Learn:** Retrieves the current AF Lock status  
 - **Callback:** Applies the AF lock setting
 
-### Set Digital Zoom
+##### Set Digital Zoom
 - **Description:** Adjusts the digital zoom factor.  
 - **Options:**  
   - **digital_zoom:** 100–1200  
@@ -78,7 +78,7 @@ This module can be used to communicate with Zowietek devices, providing Companio
 - **Learn:** Reads current digital zoom settings  
 - **Callback:** Applies the new digital zoom settings
 
-### Set Zoom Speed
+##### Set Zoom Speed
 - **Description:** Sets the PTZ zoom speed.  
 - **Options:**  
   - **zoom:** Integer 1–10  
@@ -86,13 +86,13 @@ This module can be used to communicate with Zowietek devices, providing Companio
 - **Learn:** Reads current zoom speed  
 - **Callback:** Updates the zoom speed
 
-### Trigger One-Push Focus
+##### Trigger One-Push Focus
 - **Description:** Triggers a one-push focus at optional coordinates.  
 - **Options:**  
   - **x_percent, y_percent, d_pixel:** Region for one-push focus  
 - **Callback:** Sends the focus command instantly
 
-### Add Decoding URL
+##### Add Decoding URL
 - **Description:** Adds a new decoding URL (RTSP, etc.).  
 - **Options:**  
   - **name:** Friendly name for the stream  
@@ -101,14 +101,14 @@ This module can be used to communicate with Zowietek devices, providing Companio
   - **switch:** On/off  
 - **Callback:** Sends to the device to begin decoding
 
-### Toggle Stream
+##### Toggle Stream
 - **Description:** Starts or stops a streaming index.  
 - **Options:**  
   - **index:** The stream index (0,1,2...)  
   - **switch:** On/off  
 - **Callback:** Toggles the selected stream
 
-### Set Device Time
+##### Set Device Time
 - **Description:** Updates the ZowieBox device clock and time-related settings (manual or NTP).  
 - **Options:**  
   - **device_time:** New time (ISO format)  
@@ -118,14 +118,14 @@ This module can be used to communicate with Zowietek devices, providing Companio
 - **Learn:** Retrieves the current device time  
 - **Callback:** Updates the device time
 
-### Recording Control
+##### Recording Control
 - **Description:** Starts, stops, or pauses a recording task.  
 - **Options:**  
   - **index:** The recording storage device (USB, SD, NAS)  
   - **command:** Start/stop/pause/resume  
 - **Callback:** Sends the command to control recording
 
-### Set Tally
+##### Set Tally
 - **Description:** Configures tally color and mode.  
 - **Options:**  
   - **color_id:** Off, Red, Green, Blue  
@@ -133,17 +133,17 @@ This module can be used to communicate with Zowietek devices, providing Companio
 - **Learn:** Fetches the current tally configuration  
 - **Callback:** Applies the new tally settings
 
-### Toggle Tally
+##### Toggle Tally
 - **Description:** Toggles tally on/off, or uses device state to invert.  
 - **Options:**  
   - **switch:** Off, On, or Toggle  
 - **Callback:** Updates the tally state accordingly
 
-### Reboot Device
+##### Reboot Device
 - **Description:** Sends a reboot command to the device.  
 - **Callback:** Reboots if supported
 
-### Modify Encoding Parameters
+##### Modify Encoding Parameters
 - **Description:** Sets encoding parameters for one channel (codec, resolution, etc.).  
 - **Options:**  
   - **venc_chnid:** Channel index  
@@ -151,80 +151,80 @@ This module can be used to communicate with Zowietek devices, providing Companio
 - **Learn:** Reads the current encoding config from the device  
 - **Callback:** Updates the selected channel with new parameters
 
-### Enable/Disable NDI Decoding
+##### Enable/Disable NDI Decoding
 - **Description:** Enables or disables NDI decoding for a given NDI source.  
 - **Options (Enable Only):**  
   - **ndi_name:** The NDI source name  
 - **Callback:** Updates NDI decoding state
 
-### Set NDI Group
+##### Set NDI Group
 - **Description:** Sets the NDI group used in decoder mode.  
 - **Options:**  
   - **groups:** Name of the NDI group  
 - **Callback:** Applies the group setting
 
-### NDI Switch
+##### NDI Switch
 - **Description:** Toggles the NDI encoding function on/off.  
 - **Options:**  
   - **switch_value:** 0 = Off, 1 = On  
 - **Callback:** Switches NDI encoding state
 
-### Set Audio Config
+##### Set Audio Config
 - **Description:** Sets all audio parameters (input type, codec, bitrate, sample rate, channel, volume).  
 - **Options:**  
   - **ai_type, switch (0/1), codec, bitrate, sample_rate, channel, volume, ao_devtype**  
 - **Learn:** Retrieves current audio config  
 - **Callback:** Applies new audio settings
 
-### Set Audio Switch
+##### Set Audio Switch
 - **Description:** Turns audio on or off.  
 - **Options:**  
   - **switch:** 0 = Off, 1 = On  
 - **Callback:** Immediately toggles audio
 
-### Set Exposure Info
+##### Set Exposure Info
 - **Description:** Configures camera’s exposure parameters (mode, shutter, gain, flicker, etc.).  
 - **Options:**  
   - **mode, gain, shutter, wdr, flicker, bias, backlight, metering, sensitive, etc.**  
 - **Learn:** Fetches current exposure settings  
 - **Callback:** Updates exposure parameters
 
-### Set Aperture
+##### Set Aperture
 - **Description:** Adjusts lens aperture (0=CLOSE ... 12=F1.6).  
 - **Options:**  
   - **aperture:** Aperture ID  
 - **Learn:** Reads current aperture setting  
 - **Callback:** Applies new aperture value
 
-### Set White Balance
+##### Set White Balance
 - **Description:** Sets color temperature, gains, hue, saturation, IR-cut, etc.  
 - **Options:**  
   - **mode, var, rgain, bgain, saturation, hue, ircut, etc.**  
 - **Learn:** Fetches the current WB settings  
 - **Callback:** Updates white balance parameters
 
-### Set Image Info
+##### Set Image Info
 - **Description:** Adjusts brightness, contrast, sharpness, gamma, flip, color/gray.  
 - **Options:**  
   - **brightness, contrast, sharpness, gamma, flip, color_gray**  
 - **Learn:** Reads current picture settings  
 - **Callback:** Applies new image adjustments
 
-### Set Noise Reduction
+##### Set Noise Reduction
 - **Description:** Configures 2D/3D noise reduction levels and correction factor.  
 - **Options:**  
   - **nr_2d, nr_3d, correction**  
 - **Learn:** Fetches current NR settings  
 - **Callback:** Updates noise reduction parameters
 
-### Set Image Style
+##### Set Image Style
 - **Description:** Applies a preset picture style (e.g. default, normal, bright, clarity).  
 - **Options:**  
   - **selected_id:** Style ID  
 - **Learn:** Reads current style from the device  
 - **Callback:** Applies the selected style
 
-### Set AE Lock
+##### Set AE Lock
 - **Description:** Locks or unlocks auto-exposure so it remains constant.  
 - **Options:**  
   - **ae_lock_status:** 0 = Off, 1 = On  
