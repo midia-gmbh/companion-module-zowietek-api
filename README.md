@@ -7,8 +7,8 @@ This module can be used to communicate with Zowietek devices.
   
 <br/>
 
-## Creator Notes
-I initially created this project in response to the many community requests. Moving forward, I’d love to invite the community to collaborate by testing, debugging, and contributing new features and/or bug fixes. If you find issues or have ideas, please submit a pull request or open an issue. My availability may be limited in the future, so any contributions are greatly appreciated!
+## Developer Notes
+I initially created this project in response to the many community requests. Moving forward, I’d appreciate the community collaborating by testing, debugging, and contributing new features and/or bug fixes. If you find issues or have ideas, please submit a pull request or open an issue. My availability may be limited in the future, so any contributions are greatly appreciated!
   
 <br/>
 
