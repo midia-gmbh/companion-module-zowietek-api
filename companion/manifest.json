@@ -2,7 +2,7 @@
 	"id": "zowietek-api",
 	"name": "zowietek-api",
 	"shortname": "Zowietek API",
-	"description": "This plugin enables Companion to control Zowietek devices.",
+	"description": "This plugin enables Companion to control Zowie devices.",
 	"version": "0.0.0",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-zowietek-api.git",

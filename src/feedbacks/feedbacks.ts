@@ -4,7 +4,7 @@ import {
 	CompanionFeedbackDefinitions,
 	CompanionOptionValues
 } from '@companion-module/base'
-import type { ZowieBoxInstance } from '../index.js'
+import type { ZowietekInstance } from '../index.js'
 import { outputResolutionChoices } from '../modules/constants.js'
 import { ConsoleLog } from '../modules/logger.js'
 import {
@@ -26,7 +26,7 @@ export enum FeedbackId {
 	getTally = 'getTally'
 }
 
-export function UpdateFeedbacks(instance: ZowieBoxInstance): void {
+export function UpdateFeedbacks(instance: ZowietekInstance): void {
 	const feedbacks: CompanionFeedbackDefinitions = {
 		[FeedbackId.getOutputInfo]: {
 			name: 'Output Info',

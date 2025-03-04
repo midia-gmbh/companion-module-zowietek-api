@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { ZowieBoxInstance } from '../index.js'
+import type { ZowietekInstance } from '../index.js'
 import { ConsoleLog } from '../modules/logger.js'
 import { LogLevel, Group, Opt } from './enums.js'
 
@@ -103,11 +103,11 @@ import {
   WhiteBalanceResponse,
 } from './interfaces.js'
 
-export class ZowieBoxAPI {
+export class ZowietekAPI {
   private baseUrl: string
-  private instance: ZowieBoxInstance
+  private instance: ZowietekInstance
 
-  constructor(baseUrl: string, instance: ZowieBoxInstance) {
+  constructor(baseUrl: string, instance: ZowietekInstance) {
     this.baseUrl = baseUrl
     this.instance = instance
   }

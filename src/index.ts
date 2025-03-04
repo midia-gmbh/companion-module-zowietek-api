@@ -6,15 +6,15 @@ import { UpdateVariableDefinitions } from './variables/variables.js';
 import { UpgradeScripts } from './upgrade.js'
 import { SetPresets } from './presets/presets.js';
 import { LogLevel, ZowieStatus } from './modules/enums.js';
-import { ZowieBoxAPI } from "./modules/apiClient.js";
+import { ZowietekAPI } from "./modules/apiClient.js";
 import { isValidIPAddress } from './helpers/commonHelpers.js';
 import { ConsoleLog } from './modules/logger.js';
 import { fetchData } from './events/fetchData.js';
 
-export class ZowieBoxInstance extends InstanceBase<ModuleConfig> {
+export class ZowietekInstance extends InstanceBase<ModuleConfig> {
 	config!: ModuleConfig;
 	globalSettings!: any;
-	api: ZowieBoxAPI;
+	api: ZowietekAPI;
 	states!: any;
 	actions!: any;
 	moduleInit!: boolean;
@@ -62,7 +62,7 @@ export class ZowieBoxInstance extends InstanceBase<ModuleConfig> {
 				this.globalSettings.ipAddress = this.config.ipAddress;
 				this.globalSettings.enableComs = this.config.enableComs;
 
-				this.api = new ZowieBoxAPI(this.config.ipAddress, this);
+				this.api = new ZowietekAPI(this.config.ipAddress, this);
 				this.checkConnection();
 
 				//Start a timer to collect data for feedbacks
@@ -174,7 +174,7 @@ export class ZowieBoxInstance extends InstanceBase<ModuleConfig> {
 		this.globalSettings.enableComs = config.enableComs;
 
 		if (config.enableComs && config.ipAddress && isValidIPAddress(config.ipAddress)) {
-			this.api = new ZowieBoxAPI(config.ipAddress, this);
+			this.api = new ZowietekAPI(config.ipAddress, this);
 
 			this.checkConnection();
 		} else {
@@ -192,4 +192,4 @@ export class ZowieBoxInstance extends InstanceBase<ModuleConfig> {
 }
 
 // Entry point for the module
-runEntrypoint(ZowieBoxInstance, UpgradeScripts);
+runEntrypoint(ZowietekInstance, UpgradeScripts);

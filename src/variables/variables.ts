@@ -1,8 +1,8 @@
 import { CompanionOptionValues, CompanionVariableDefinition } from '@companion-module/base'
-import type { ZowieBoxInstance } from '../index.js'
+import type { ZowietekInstance } from '../index.js'
 
 
-export function UpdateVariableDefinitions(instance: ZowieBoxInstance): void {
+export function UpdateVariableDefinitions(instance: ZowietekInstance): void {
 	/*
 	instance.variables = []
 

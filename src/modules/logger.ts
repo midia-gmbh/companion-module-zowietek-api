@@ -1,5 +1,5 @@
 import { LogLevel } from "./enums.js";
-import { ZowieBoxInstance } from '../index.js';
+import { ZowietekInstance } from '../index.js';
 
 let logLevel: LogLevel;
 
@@ -9,7 +9,7 @@ let logLevel: LogLevel;
  * @param {LogLevel} [level=logLevel] - The log level for the message.
  * @param {boolean} [sendToConsole=false] - Flag to determine if the message should also be logged to the console.
  */
-function ConsoleLog(instance: ZowieBoxInstance, message: string, level: LogLevel = logLevel, sendToConsole: boolean = false) {
+function ConsoleLog(instance: ZowietekInstance, message: string, level: LogLevel = logLevel, sendToConsole: boolean = false) {
     // Log to Companion logger based on the specified log level
     switch (level) {
         case LogLevel.DEBUG:

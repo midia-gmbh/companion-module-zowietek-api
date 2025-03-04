@@ -2,8 +2,8 @@
 ![GitHub Downloads (Latest Release)](https://img.shields.io/github/downloads/bitfocus/companion-module-zowietek-api/latest/total)
 
 
-## Zowietek ZowieBox Companion Plugin
-This module can be used to communicate with a ZowieBox.
+## Zowietek API Companion Plugin
+This module can be used to communicate with Zowietek devices.
   
 <br/>
 

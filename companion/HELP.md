@@ -1,6 +1,6 @@
-# Zowietek ZowieBox
+# Zowietek API
 
-This module can be used to communicate with a ZowieBox device, providing Companion actions and feedbacks for control of PTZ, streaming, audio, NDI, tally, and more.
+This module can be used to communicate with Zowietek devices, providing Companion actions and feedbacks for control of PTZ, streaming, audio, NDI, tally, and more.
 
 ---
 ### Actions

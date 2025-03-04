@@ -1,5 +1,5 @@
 import { Regex } from '@companion-module/base'
-import type { ZowieBoxInstance } from '../index.js'
+import type { ZowietekInstance } from '../index.js'
 import { ConsoleLog } from '../modules/logger.js'
 import {
   LogLevel,
@@ -67,7 +67,7 @@ export enum ActionId {
   setAELock = 'setAELock',
 }
 
-export function UpdateActions(instance: ZowieBoxInstance): void {
+export function UpdateActions(instance: ZowietekInstance): void {
   instance.setActionDefinitions({
     [ActionId.setOutputInfo]: {
       name: 'Set Output Info',

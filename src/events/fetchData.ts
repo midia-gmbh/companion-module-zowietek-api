@@ -1,10 +1,10 @@
 import { LogLevel, ZowieStatus } from "../modules/enums.js";
-import { ZowieBoxInstance } from "../index.js";
+import { ZowietekInstance } from "../index.js";
 import { ConsoleLog } from "../modules/logger.js";
 import { getZowieStatusLabel } from "../helpers/commonHelpers.js";
 import { FeedbackId } from "../feedbacks/feedbacks.js";
 
-export async function fetchData(instance: ZowieBoxInstance): Promise<void> {
+export async function fetchData(instance: ZowietekInstance): Promise<void> {
 	if (!instance.globalSettings.enableComs || !instance.api || !instance.connected) {
 		return;
 	}
