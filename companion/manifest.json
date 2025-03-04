@@ -1,0 +1,26 @@
+{
+	"id": "zowietek-api",
+	"name": "zowietek-api",
+	"shortname": "Zowietek API",
+	"description": "This plugin enables Companion to control Zowietek devices.",
+	"version": "0.0.0",
+	"license": "MIT",
+	"repository": "git+https://github.com/bitfocus/companion-module-zowietek-api.git",
+	"bugs": "https://github.com/bitfocus/companion-module-zowietek-api/issues",
+	"maintainers": [
+		{
+			"name": "Danielle Thompson",
+			"github": "https://github.com/logicallysynced/"
+		}
+	],
+	"runtime": {
+		"type": "node22",
+		"api": "nodejs-ipc",
+		"apiVersion": "0.0.0",
+		"entrypoint": "../dist/index.js"
+	},
+	"legacyIds": [],
+	"manufacturer": "Zowietek",
+	"products": ["ZowieBox", "ZowiePTZ", "ZowieCam"],
+	"keywords": ["Zowietek", "ZowieBox", "ZowiePTZ", "ZowieCam"]
+}
