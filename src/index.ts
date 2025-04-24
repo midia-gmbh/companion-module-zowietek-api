@@ -32,6 +32,7 @@ export class ZowietekInstance extends InstanceBase<ModuleConfig> {
 		this.variables = [];
 		this.globalSettings = {};
 		this.constants = {
+			inputInfo: {},
 			outputInfo: {},
 			audioConfig: {},
 			deviceTime: {},

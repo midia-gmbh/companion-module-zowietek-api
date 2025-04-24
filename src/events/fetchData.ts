@@ -2,14 +2,27 @@ import { LogLevel, ZowieStatus } from "../modules/enums.js";
 import { ZowietekInstance } from "../index.js";
 import { ConsoleLog } from "../modules/logger.js";
 import { getZowieStatusLabel } from "../helpers/commonHelpers.js";
+import { inputVariableConfigs, outputVariableConfigs, recordingVariableConfigs} from '../variables/variables.js';
 import { FeedbackId } from "../feedbacks/feedbacks.js";
+
+// Utility zum Extrahieren eines Werts aus einem Objekt anhand eines Dot-Notation-Pfads
+function extractValue(data: any, apiPath: string): any {
+    const keys = apiPath.split('.');
+    let result = data;
+    for (const key of keys) {
+        if (result == null) return undefined;
+        result = result[key];
+    }
+    return result;
+}
 
 export async function fetchData(instance: ZowietekInstance): Promise<void> {
 	if (!instance.globalSettings.enableComs || !instance.api || !instance.connected) {
 		return;
 	}
 
-	const [getOutputInfo, getAudioConfig, getDeviceTime, getTally, getRecordingStatus] = await Promise.all([
+	const [getInputSignal, getOutputInfo, getAudioConfig, getDeviceTime, getTally, getRecordingStatus] = await Promise.all([
+		instance.api.getInputSignal(),
 		instance.api.getOutputInfo(),
 		instance.api.getAudioConfig(),
 		instance.api.getDeviceTime(),
@@ -17,11 +30,47 @@ export async function fetchData(instance: ZowietekInstance): Promise<void> {
 		instance.api.getRecordingTaskList(),
 	]);
 
+	//Fetch Input Signal
+	if (getInputSignal.status === ZowieStatus.Successful || getInputSignal.status === ZowieStatus.ModificationSuccessful) {
+        //ConsoleLog(instance, `Feedback Input Signal: ${JSON.stringify(getInputSignal.data)}`, LogLevel.DEBUG);
+        Object.assign(instance.constants.inputInfo, getInputSignal.data);
+
+        // VARIABLES
+		const inputVariableValues: { [key: string]: any } = {};
+        inputVariableConfigs.forEach(config => {
+            let value = extractValue(instance.constants.inputInfo, config.apiPath);
+            if (config.type === 'boolean') {
+                value = value === 1 ? true : false;
+            } else {
+                value = value !== undefined ? value.toString() : undefined;
+            }
+            const varId = `input_${config.apiPath.replace(/\./g, '_')}`;
+            inputVariableValues[varId] = value;
+        });
+        instance.setVariableValues(inputVariableValues);
+    } else {
+        ConsoleLog(instance, `Failed to get Input Signal: ${getZowieStatusLabel(getInputSignal.status)}`, LogLevel.ERROR);
+    }
+
+
     //Fetch Output Info
 	if (getOutputInfo.status === ZowieStatus.Successful || getOutputInfo.status === ZowieStatus.ModificationSuccessful) {
 		//ConsoleLog(instance, `Feedback Output Info: ${JSON.stringify(getOutputInfo.data)}`, LogLevel.DEBUG);
 		Object.assign(instance.constants.outputInfo, getOutputInfo.data);
 		instance.checkFeedbacks(FeedbackId.getOutputInfo);
+		// VARIABLES
+		const outputVariableValues: { [key: string]: any } = {};
+        outputVariableConfigs.forEach(config => {
+            let value = extractValue(instance.constants.outputInfo, config.apiPath);
+            if (config.type === 'boolean') {
+                value = value === 1 ? true : false;
+            } else {
+                value = value !== undefined ? value.toString() : undefined;
+            }
+            const varId = `output_${config.apiPath.replace(/\./g, '_')}`;
+            outputVariableValues[varId] = value;
+        });
+        instance.setVariableValues(outputVariableValues);
 	} else {
 		ConsoleLog(instance, `Failed to get Output Info: ${getZowieStatusLabel(getOutputInfo.status)}`, LogLevel.ERROR);
 	}
@@ -68,12 +117,31 @@ export async function fetchData(instance: ZowietekInstance): Promise<void> {
 	}
 
 	//Fetch Recording Status
-	if (getRecordingStatus.status === ZowieStatus.Successful || getRecordingStatus.status === ZowieStatus.ModificationSuccessful) {
+    if (getRecordingStatus.status === ZowieStatus.Successful || getRecordingStatus.status === ZowieStatus.ModificationSuccessful) {
 		//ConsoleLog(instance, `Feedback Recording Status: ${JSON.stringify(getRecordingStatus.data)}`, LogLevel.DEBUG);
-		instance.constants.recordingTasks = getRecordingStatus.data;
-		//ConsoleLog(instance, `Recording Tasks updated: ${JSON.stringify(instance.constants.recordingTasks)}`, LogLevel.DEBUG);
-		instance.checkFeedbacks(FeedbackId.getRecordingStatus);
-	} else {
-		ConsoleLog(instance, `Failed to get Recording Status: ${getZowieStatusLabel(getRecordingStatus.status)}`, LogLevel.ERROR);
-	}
+        // Speichere die Recording Tasks in den Konstanten
+        instance.constants.recordingTasks = getRecordingStatus.data;
+        instance.checkFeedbacks(FeedbackId.getRecordingStatus);
+		instance.checkFeedbacks(FeedbackId.remainingStorageBar);
+		instance.checkFeedbacks(FeedbackId.recordingDuration);
+
+		// VARIABLES
+		const recordingVariableValues: { [key: string]: any } = {};
+        instance.constants.recordingTasks.forEach((task: any) => {
+            recordingVariableConfigs.forEach(config => {
+                let value = extractValue(task, config.apiPath);
+                if (config.type === 'boolean') {
+                    value = value === 1 ? true : false;
+                } else {
+                    value = value !== undefined ? value.toString() : undefined;
+                }
+                const varId = `recording_${task.index}_${config.apiPath.replace(/\./g, '_')}`;
+                recordingVariableValues[varId] = value;
+            });
+        });
+
+        instance.setVariableValues(recordingVariableValues);
+    } else {
+        ConsoleLog(instance, `Failed to get Recording Status: ${getZowieStatusLabel(getRecordingStatus.status)}`, LogLevel.ERROR);
+    }
 }

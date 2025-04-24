@@ -2,8 +2,9 @@ import {
 	combineRgb,
 	CompanionFeedbackDefinition,
 	CompanionFeedbackDefinitions,
-	CompanionOptionValues
+	CompanionOptionValues,
 } from '@companion-module/base'
+import { graphics } from 'companion-module-utils'
 import type { ZowietekInstance } from '../index.js'
 import { outputResolutionChoices } from '../modules/constants.js'
 import { ConsoleLog } from '../modules/logger.js'
@@ -24,7 +25,9 @@ export enum FeedbackId {
 	getAudioConfig = 'getAudioConfig',
 	getDeviceTime = 'getDeviceTime',
 	getTally = 'getTally',
-	getRecordingStatus = 'getRecordingStatus'
+	getRecordingStatus = 'getRecordingStatus',
+	remainingStorageBar = 'remainingStorageBar',
+	recordingDuration = 'recordingDuration'
 }
 
 export function UpdateFeedbacks(instance: ZowietekInstance): void {
@@ -389,7 +392,7 @@ export function UpdateFeedbacks(instance: ZowietekInstance): void {
 			description: 'Feedback based on the status of recording tasks (aggregated).',
 			defaultStyle: {
 				color: combineRgb(255, 255, 255),
-				bgcolor: combineRgb(255, 0, 0)
+				bgcolor: combineRgb(204, 0, 0)
 			},
 			showInvert: true,
 			options: [
@@ -405,7 +408,7 @@ export function UpdateFeedbacks(instance: ZowietekInstance): void {
 						{ id: '4', label: 'Storage device is invalid/not mounted' },
 						{ id: '5', label: 'No signal source' }
 					],
-					default: '0'
+					default: '1'
 				}
 			],
 			callback: async (feedback, context) => {
@@ -418,7 +421,153 @@ export function UpdateFeedbacks(instance: ZowietekInstance): void {
 					return task.status.toString() === desiredStatus;
 				});
 			}
-		}
+		},
+		[FeedbackId.remainingStorageBar]: {
+			type: 'advanced',
+			name: 'Remaining Storage',
+			description: 'Displays a progress bar showing the percentage of free/used storage on a selected device and shows the percentage as text.',
+			options: [
+				{
+					id: 'type',
+					type: 'dropdown',
+					label: 'Display Mode',
+					choices: [
+						{ id: 'countUp', label: 'Free Storage' },
+						{ id: 'countDown', label: 'Used Storage' },
+					],
+					default: 'countUp',
+				},
+				{
+					id: 'storage',
+					type: 'dropdown',
+					label: 'Storage Device',
+					choices: [
+						{ id: 'usb1_0', label: 'USB' },
+						{ id: 'nas1_0', label: 'NAS' },
+						{ id: 'sdcard_0', label: 'SD Card' }
+					],
+					default: 'usb1_0'
+				}
+			],
+			callback: (feedback, context) => {
+				// Ermitteln des ausgewählten Storage-Typs
+				const storageId = feedback.options.storage as string;
+				const storageChoices = [
+					{ id: 'usb1_0', label: 'USB' },
+					{ id: 'nas1_0', label: 'NAS' },
+					{ id: 'sdcard_0', label: 'SD Card' }
+				];
+				const storageChoice = storageChoices.find(choice => choice.id === storageId);
+				const storageName = storageChoice ? storageChoice.label : storageId;
+				
+				// Dynamisch Variablennamen anhand des ausgewählten Speichers:
+				const freeVar = `recording_${storageId}_storageInfo_freespace`;
+				const totalVar = `recording_${storageId}_storageInfo_totalspace`;
+				
+				const freeSpace = parseFloat(String(instance.getVariableValue(freeVar))) || 0;
+				const totalSpace = parseFloat(String(instance.getVariableValue(totalVar))) || 0;
+				const freePercentage = totalSpace > 0 ? (freeSpace / totalSpace) * 100 : 0;
+			
+				let colors, value;
+				switch (feedback.options.type) {
+					case 'countUp':
+						colors = [
+							{ size: freePercentage, color: combineRgb(0, 200, 0), background: combineRgb(0, 50, 0), backgroundOpacity: 255 },
+						];
+						value = freePercentage;
+						break;
+					case 'countDown':
+					default:
+						colors = [
+							{ size: freePercentage, color: combineRgb(0, 50, 0), background: combineRgb(0, 0, 0), backgroundOpacity: 255 },
+							{ size: 100 - freePercentage, color: combineRgb(0, 200, 0), background: combineRgb(0, 200, 0), backgroundOpacity: 255 },
+						];
+						value = 100;
+						break;
+				}
+			
+				// Warning und Error Color:
+				// Orange: 10% - 1%
+				// Red: 1% - 0%
+				const red = { r: 204, g: 0, b: 0 }
+				const orange = { r: 204, g: 101, b: 0 }
+				let bgcolor;
+				if (freePercentage <= 10 && freePercentage > 1) {
+					bgcolor = combineRgb(orange.r, orange.g, orange.b)
+				} else if (freePercentage <= 1) {
+					bgcolor = combineRgb(red.r, red.g, red.b)
+				} else {
+					bgcolor = combineRgb(0, 0, 0)
+				}
+			
+				const barWidth = 6;
+				const barLength = 62;
+				const verticalOptions = {
+					width: 72,
+					height: 72,
+					colors: colors,
+					barLength: barLength,
+					barWidth: barWidth,
+					value: value,
+					type: 'vertical' as 'vertical',
+					// Setze offsetX so, dass der Balken rechts erscheint:
+					offsetX: 72 - barWidth - 5,
+					offsetY: 5,
+					opacity: 255,
+				};
+			
+				// Text je nach Display Mode: "Free Storage" (countUp) oder "Used Storage" (countDown).
+				let textStatus;
+				if (feedback.options.type === 'countUp') {
+					textStatus = `Free Storage\n${storageName}\n${freePercentage.toFixed(1)}%`;
+				} else {
+					const usedPercentage = 100 - freePercentage;
+					textStatus = `Used Storage\n${storageName}\n${usedPercentage.toFixed(1)}%`;
+				}
+			
+				return {
+					imageBuffer: graphics.bar(verticalOptions),
+					bgcolor: bgcolor,
+					text: textStatus,
+					textColor: combineRgb(255, 255, 255),
+					size: 14,
+					alignment: 'left:center',
+					show_topbar: false,
+				};
+			},
+		},
+		[FeedbackId.recordingDuration]: {
+			type: 'advanced',
+			name: 'Recording Duration',
+			description: 'Displays the consolidated recording duration from USB, SDCard and NAS formatted as hh:mm:ss or mm:ss.',
+			options: [],
+			callback: (feedback, context) => {
+				// Hole die Dauerwerte aller Speicher. Ist der Wert undefined oder 0, wird 0 zurückgegeben.
+				const usbDuration = parseFloat(String(instance.getVariableValue('recording_usb1_0_duration'))) || 0;
+				const sdcardDuration = parseFloat(String(instance.getVariableValue('recording_sdcard_0_duration'))) || 0;
+				const nasDuration = parseFloat(String(instance.getVariableValue('recording_nas1_0_duration'))) || 0;
+				
+				// Konsolidiere den Wert: Nehme den ersten Wert > 0, ansonsten 0
+				const durationSeconds = usbDuration > 0 ? usbDuration :
+										   sdcardDuration > 0 ? sdcardDuration :
+										   nasDuration > 0 ? nasDuration : 0;
+		
+				// Berechnung der Stunden, Minuten und Sekunden:
+				const hh = Math.floor(durationSeconds / 3600);
+				const mm = Math.floor((durationSeconds % 3600) / 60);
+				const ss = Math.floor(durationSeconds % 60);
+		
+				// Formatierung: Wenn Stunden > 0, dann hh:mm:ss, ansonsten mm:ss
+				const formatted = hh > 0
+					? `${hh.toString().padStart(2, '0')}:${mm.toString().padStart(2, '0')}:${ss.toString().padStart(2, '0')}`
+					: `${mm.toString().padStart(2, '0')}:${ss.toString().padStart(2, '0')}`;
+		
+				return {
+					text: 'REC Duration:\n'+formatted,
+					textColor: combineRgb(255, 255, 255)
+				};
+			}
+		},
 	}
 	instance.setFeedbackDefinitions(feedbacks)
 }
