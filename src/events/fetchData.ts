@@ -144,4 +144,23 @@ export async function fetchData(instance: ZowietekInstance): Promise<void> {
     } else {
         ConsoleLog(instance, `Failed to get Recording Status: ${getZowieStatusLabel(getRecordingStatus.status)}`, LogLevel.ERROR);
     }
+	// Fetch NDI Decode Status
+const getNDISource = await instance.api.getNDISource();
+if (getNDISource.status === ZowieStatus.Successful || getNDISource.status === ZowieStatus.ModificationSuccessful) {
+    // Speichere die NDI-Daten in den Konstanten
+    instance.constants.ndiSources = getNDISource.data;
+
+    // Aktualisiere Feedbacks
+    instance.checkFeedbacks(FeedbackId.getNDIDecodeStatus);
+
+    // Setze Variablen für NDI-Quellen
+    const ndiVariableValues: { [key: string]: any } = {};
+    instance.constants.ndiSources.forEach((source: any) => {
+        ndiVariableValues[`ndi_${source.index}_name`] = source.name;
+        ndiVariableValues[`ndi_${source.index}_status`] = source.streamplay_status.toString();
+    });
+    instance.setVariableValues(ndiVariableValues);
+} else {
+    ConsoleLog(instance, `Failed to get NDI Sources: ${getZowieStatusLabel(getNDISource.status)}`, LogLevel.ERROR);
+}
 }

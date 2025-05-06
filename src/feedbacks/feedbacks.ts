@@ -27,7 +27,8 @@ export enum FeedbackId {
 	getTally = 'getTally',
 	getRecordingStatus = 'getRecordingStatus',
 	remainingStorageBar = 'remainingStorageBar',
-	recordingDuration = 'recordingDuration'
+	recordingDuration = 'recordingDuration',
+	getNDIDecodeStatus = 'getNDIDecodeStatus',
 }
 
 export function UpdateFeedbacks(instance: ZowietekInstance): void {
@@ -567,6 +568,73 @@ export function UpdateFeedbacks(instance: ZowietekInstance): void {
 					textColor: combineRgb(255, 255, 255)
 				};
 			}
+		},
+		[FeedbackId.getNDIDecodeStatus]: {
+			name: 'NDI Decode Status',
+			type: 'advanced',
+			description: 'Changes the button background based on the NDI decode status.',
+			options: [
+				{
+					id: 'ndi_name',
+					type: 'textinput',
+					label: 'NDI Source Name',
+					default: '',
+				},
+			],
+			callback: (feedback, context) => {
+				const ndiName = feedback.options.ndi_name as string;
+				const ndiSource = instance.constants.ndiSources?.find((source: any) => source.name === ndiName);
+		
+				if (!ndiSource) {
+					return {
+						bgcolor: combineRgb(128, 128, 128), // Grau, wenn keine Quelle gefunden wurde
+						text: 'NDI Source Not Found',
+					};
+				}
+		
+				// Hintergrundfarbe und Text basierend auf dem Status
+				let bgcolor;
+				let text;
+				switch (ndiSource.streamplay_status) {
+					case 0:
+						bgcolor = combineRgb(0, 0, 0); // Schwarz
+						//text = `NDI: ${ndiSource.name}\nStatus: Not turned on`;
+						break;
+					case 1:
+						bgcolor = combineRgb(0, 204, 0); // Grün
+						//text = `NDI: ${ndiSource.name}\nStatus: Pulling stream`;
+						break;
+					case 2:
+						bgcolor = combineRgb(204, 102, 0); // Orange
+						//text = `NDI: ${ndiSource.name}\nStatus: Pulling stream stopped`;
+						break;
+					case 3:
+						bgcolor = combineRgb(204, 0, 0); // Rot
+						//text = `NDI: ${ndiSource.name}\nStatus: No video`;
+						break;
+					case 4:
+						bgcolor = combineRgb(153, 0, 255); // Lila
+						//text = `NDI: ${ndiSource.name}\nStatus: Video format unsupported`;
+						break;
+					case 5:
+						bgcolor = combineRgb(204, 102, 0); // Blau
+						//text = `NDI: ${ndiSource.name}\nStatus: No audio`;
+						break;
+					case 6:
+						bgcolor = combineRgb(153, 0, 255); // Lila
+						//text = `NDI: ${ndiSource.name}\nStatus: Audio format unsupported`;
+						break;
+					default:
+						bgcolor = combineRgb(0, 0, 0); // Schwarz
+						//text = `NDI: ${ndiSource.name}\nStatus: Unknown`;
+				}
+		
+				return {
+					bgcolor,
+					text,
+					textColor: combineRgb(255, 255, 255),
+				};
+			},
 		},
 	}
 	instance.setFeedbackDefinitions(feedbacks)

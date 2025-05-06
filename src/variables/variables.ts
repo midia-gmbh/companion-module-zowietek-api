@@ -133,6 +133,52 @@ export function UpdateVariableDefinitions(instance: ZowietekInstance): void {
             });
         });
     });
+    // // NDI Decode Variablen
+    // const ndiSources: any[] = instance.constants.ndiSources || [
+    //     // Fallback-Beispieldaten
+    //     {
+    //         index: 0,
+    //         name: "HD CAMERA (NDI HB HX,192.168.1.205)",
+    //         streamplay_status: 0,
+    //         bandwidth: 0,
+    //         framerate: 0,
+    //         width: 0,
+    //         height: 0
+    //     },
+    //     {
+    //         index: 1,
+    //         name: "NDI_HX (NDI-901233)",
+    //         streamplay_status: 1,
+    //         bandwidth: 5000,
+    //         framerate: 30,
+    //         width: 1920,
+    //         height: 1080
+    //     }
+    // ];
+
+    // ndiSources.forEach(source => {
+    //     // Variablen für jede NDI-Quelle erstellen
+    //     variableDefinitions.push({
+    //         variableId: `ndi_${source.index}_name`,
+    //         name: `NDI Source ${source.index} Name`
+    //     });
+    //     variableDefinitions.push({
+    //         variableId: `ndi_${source.index}_status`,
+    //         name: `NDI Source ${source.index} Status`
+    //     });
+    //     variableDefinitions.push({
+    //         variableId: `ndi_${source.index}_bandwidth`,
+    //         name: `NDI Source ${source.index} Bandwidth`
+    //     });
+    //     variableDefinitions.push({
+    //         variableId: `ndi_${source.index}_framerate`,
+    //         name: `NDI Source ${source.index} Framerate`
+    //     });
+    //     variableDefinitions.push({
+    //         variableId: `ndi_${source.index}_resolution`,
+    //         name: `NDI Source ${source.index} Resolution`
+    //     });
+    // });
 
     // Setze alle Variablendefinitionen (ohne "description")
     instance.setVariableDefinitions(variableDefinitions);
