@@ -1,6 +1,6 @@
 {
   "name": "zowietek-api",
-  "version": "1.1.0-midia",
+  "version": "1.1.1-midia",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {

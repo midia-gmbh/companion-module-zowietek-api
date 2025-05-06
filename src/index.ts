@@ -58,29 +58,33 @@ export class ZowietekInstance extends InstanceBase<ModuleConfig> {
 
 	setupClient(): void {
 		if (this.config.enableComs && this.config.ipAddress && isValidIPAddress(this.config.ipAddress)) {
-
+	
 			if (!this.moduleInit) {
 				this.globalSettings.ipAddress = this.config.ipAddress;
 				this.globalSettings.enableComs = this.config.enableComs;
-
+	
 				this.api = new ZowietekAPI(this.config.ipAddress, this);
 				this.checkConnection();
-
-				//Start a timer to collect data for feedbacks
+	
+				// Start a timer to collect general data for feedbacks (every 1 second)
 				setInterval(() => {
-					fetchData(this);
+					fetchData(this, { general: true });
 				}, 1000);
-
-				//Start a time to check health of connection
+	
+				// Start a timer to fetch NDI and Storage data (every 5 seconds)
+				setInterval(() => {
+					fetchData(this, { ndi: true, storage: true });
+				}, 5000);
+	
+				// Start a timer to check the health of the connection (every 5 seconds)
 				setInterval(() => {
 					this.checkConnection();
 				}, 5000);
-
+	
 				this.moduleInit = true;
 				ConsoleLog(this, `Module initialized`, LogLevel.DEBUG);
 			}
-			
-
+	
 		} else {
 			if (!this.config.ipAddress || !isValidIPAddress(this.config.ipAddress)) {
 				this.updateStatus(InstanceStatus.BadConfig);
