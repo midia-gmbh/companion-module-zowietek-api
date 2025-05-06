@@ -148,6 +148,7 @@ export async function fetchData(instance: ZowietekInstance): Promise<void> {
 const getNDISource = await instance.api.getNDISource();
 if (getNDISource.status === ZowieStatus.Successful || getNDISource.status === ZowieStatus.ModificationSuccessful) {
     // Speichere die NDI-Daten in den Konstanten
+    //ConsoleLog(instance, `Feedback NDI Source: ${JSON.stringify(getNDISource.data)}`, LogLevel.DEBUG);
     instance.constants.ndiSources = getNDISource.data;
 
     // Aktualisiere Feedbacks
@@ -161,6 +162,6 @@ if (getNDISource.status === ZowieStatus.Successful || getNDISource.status === Zo
     });
     instance.setVariableValues(ndiVariableValues);
 } else {
-    ConsoleLog(instance, `Failed to get NDI Sources: ${getZowieStatusLabel(getNDISource.status)}`, LogLevel.ERROR);
+    //ConsoleLog(instance, `Failed to get NDI Sources: ${getZowieStatusLabel(getNDISource.status)}`, LogLevel.ERROR);
 }
 }
