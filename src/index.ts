@@ -69,7 +69,7 @@ export class ZowietekInstance extends InstanceBase<ModuleConfig> {
 				//Start a timer to collect data for feedbacks
 				setInterval(() => {
 					fetchData(this);
-				}, 1000);
+				}, 2000);
 
 				//Start a time to check health of connection
 				setInterval(() => {
